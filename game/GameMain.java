@@ -14,6 +14,9 @@ public class GameMain extends JPanel implements Runnable {
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
     public static final int CLEAR_SCORE = 30;
+    private static final int OBJECT_INFO_X = 10; 
+    private static final int OBJECT_INFO_Y = 80; 
+    private static final int OBJECT_INFO_SPACING = 20; 
     private Thread thread;
     private boolean running;
     private BufferedImage image;
@@ -36,6 +39,7 @@ public class GameMain extends JPanel implements Runnable {
     private Font startScreenFont;
     private Font gameOverFont;
     private Font gameClearFont;
+    private Font objectInfoFont;
     private Random random;
     private boolean pKeyPressed = false;
 
@@ -57,6 +61,7 @@ public class GameMain extends JPanel implements Runnable {
         startScreenFont = new Font("Arial", Font.BOLD, 48);
         gameOverFont = new Font("Arial", Font.BOLD, 48);
         gameClearFont = new Font("Arial", Font.BOLD, 48);
+        objectInfoFont = new Font("Arial", Font.PLAIN, 16);
         random = new Random();
     }
 
@@ -148,6 +153,7 @@ public class GameMain extends JPanel implements Runnable {
                 }
                 drawScore();
                 drawHp();
+                drawObjectInfoList(g);
                 break;
             case PAUSED:
                 backGround.render(g);
@@ -292,6 +298,18 @@ public class GameMain extends JPanel implements Runnable {
         g.setColor(Color.RED);
         g.drawString("HP: " + hp, 10, 60);
     }
+
+    private void drawObjectInfoList(Graphics2D g) {
+        g.setFont(objectInfoFont);
+        g.setColor(Color.BLACK);
+
+        
+        g.drawString("Apple: Score 1", OBJECT_INFO_X, OBJECT_INFO_Y);
+        g.drawString("Banana: Score 3", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING);
+        g.drawString("Coconut: Damage 10", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING * 2);
+        g.drawString("Branch: Damage 20", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING * 3);
+    }
+
 
     private void drawStartScreen() {
         g.setFont(startScreenFont);
