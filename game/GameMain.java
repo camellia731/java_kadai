@@ -42,6 +42,7 @@ public class GameMain extends JPanel implements Runnable {
     private Font objectInfoFont;
     private Random random;
     private boolean pKeyPressed = false;
+    private MusicPlayer musicPlayer;
 
     public GameMain() {
         super();
@@ -63,6 +64,13 @@ public class GameMain extends JPanel implements Runnable {
         gameClearFont = new Font("Arial", Font.BOLD, 48);
         objectInfoFont = new Font("Arial", Font.PLAIN, 16);
         random = new Random();
+
+        
+        musicPlayer = new MusicPlayer("game/resources/background_music.wav");
+        musicPlayer.addSoundEffect("get", "game/resources/get.wav");
+        musicPlayer.addSoundEffect("damaged", "game/resources/damaged.wav");
+        musicPlayer.addSoundEffect("gameclear", "game/resources/gameclear.wav");
+        musicPlayer.addSoundEffect("gameover", "game/resources/gameover.wav");
     }
 
     public void addNotify() {
@@ -105,6 +113,9 @@ public class GameMain extends JPanel implements Runnable {
         g = (Graphics2D) image.getGraphics();
         running = true;
         gameState = GameState.START;
+
+        
+        musicPlayer.playBGM();
     }
 
     private void update() {
@@ -178,7 +189,7 @@ public class GameMain extends JPanel implements Runnable {
     private void handleStartScreenInput() {
         if (inputHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
             gameState = GameState.PLAYING;
-            //resetGame();
+            
         }
     }
 
@@ -213,8 +224,8 @@ public class GameMain extends JPanel implements Runnable {
 
     private void handleGameOverInput() {
         if (inputHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
-            resetGame(); 
             gameState = GameState.START;
+            resetGame(); 
         }
     }
 
@@ -255,17 +266,16 @@ public class GameMain extends JPanel implements Runnable {
         Rectangle playerRect = player.getBounds();
         for (int i = 0; i < objects.size(); i++) {
             Object obj = objects.get(i);
-            Rectangle objectRect = obj.getBounds();
-            if (playerRect.intersects(objectRect)) {
+            if (playerRect.intersects(obj.getBounds())) {
                 if (obj instanceof Item) {
                     score += ((Item) obj).getScoreValue();
-                    objects.remove(i);
-                    i--;
+                    musicPlayer.playSoundEffect("get"); 
                 } else if (obj instanceof Obstacle) {
                     hp -= ((Obstacle) obj).getDamage();
-                    objects.remove(i);
-                    i--;
+                    musicPlayer.playSoundEffect("damaged"); 
                 }
+                objects.remove(i);
+                i--;
             }
         }
     }
@@ -273,12 +283,16 @@ public class GameMain extends JPanel implements Runnable {
     private void checkGameOver() {
         if (hp <= 0) {
             gameState = GameState.GAME_OVER;
+            musicPlayer.stopBGM();
+            musicPlayer.playSoundEffect("gameover"); 
         }
     }
 
     private void checkGameClear() {
         if (score >= CLEAR_SCORE) {
             gameState = GameState.GAME_CLEAR;
+            musicPlayer.stopBGM();
+            musicPlayer.playSoundEffect("gameclear");
         }
     }
 
@@ -286,6 +300,10 @@ public class GameMain extends JPanel implements Runnable {
         score = 0;
         hp = MAX_HP;
         objects.clear();
+
+        
+        musicPlayer.stopBGM();
+        musicPlayer.playBGM();
     }
 
     private void drawScore() {
