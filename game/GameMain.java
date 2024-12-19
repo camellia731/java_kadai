@@ -219,6 +219,7 @@ public class GameMain extends JPanel implements Runnable {
 
     private void handleGameClearInput() {
         if (inputHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
+            resetGame();
             gameState = GameState.START;
         }
     }
@@ -276,7 +277,6 @@ public class GameMain extends JPanel implements Runnable {
 
     private void checkGameClear() {
         if (score >= CLEAR_SCORE) {
-            resetGame();
             gameState = GameState.GAME_CLEAR;
         }
     }
@@ -340,6 +340,9 @@ public class GameMain extends JPanel implements Runnable {
         g.setFont(gameClearFont);
         g.setColor(Color.GREEN);
         g.drawString("GAME CLEAR!", WIDTH / 2 - 180, HEIGHT / 2 - 50);
+        g.setColor(Color.WHITE);
+        g.setFont(scoreFont);
+        g.drawString("Score: " + score, WIDTH / 2 - 60, HEIGHT / 2 + 20);
         g.setFont(scoreFont);
         g.drawString("Press Enter to Restart", WIDTH / 2 - 120, HEIGHT / 2 + 50);
     }
