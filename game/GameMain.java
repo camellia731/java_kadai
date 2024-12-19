@@ -153,7 +153,7 @@ public class GameMain extends JPanel implements Runnable {
                 }
                 drawScore();
                 drawHp();
-                drawObjectInfoList(g);
+                drawObjectInfoList();
                 break;
             case PAUSED:
                 backGround.render(g);
@@ -163,6 +163,7 @@ public class GameMain extends JPanel implements Runnable {
                 }
                 drawScore();
                 drawHp();
+                drawObjectInfoList();
                 drawPausedScreen();
                 break;
             case GAME_CLEAR:
@@ -299,7 +300,7 @@ public class GameMain extends JPanel implements Runnable {
         g.drawString("HP: " + hp, 10, 60);
     }
 
-    private void drawObjectInfoList(Graphics2D g) {
+    private void drawObjectInfoList() {
         g.setFont(objectInfoFont);
         g.setColor(Color.BLACK);
 
