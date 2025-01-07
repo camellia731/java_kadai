@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Random;
 
 public class GameMain extends JPanel implements Runnable, ActionListener {
-    public static final int WIDTH = 600;
+    public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
-    public static final int CLEAR_SCORE = 30;
-    private static final int OBJECT_INFO_X = 10; 
-    private static final int OBJECT_INFO_Y = 80; 
-    private static final int OBJECT_INFO_SPACING = 20; 
+    public static final int CLEAR_SCORE = 100;
+    private static final int OBJECT_INFO_X = 10;
+    private static final int OBJECT_INFO_Y = 80;
+    private static final int OBJECT_INFO_SPACING = 20;
     private Thread thread;
     private boolean running;
     private BufferedImage image;
@@ -65,7 +65,6 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
         objectInfoFont = new Font("Arial", Font.PLAIN, 16);
         random = new Random();
 
-        
         musicPlayer = new MusicPlayer("game/resources/background_music.wav");
         musicPlayer.addSoundEffect("get", "game/resources/get.wav");
         musicPlayer.addSoundEffect("damaged", "game/resources/damaged.wav");
@@ -79,26 +78,25 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
             thread = new Thread(this);
             thread.start();
         }
-            Timer timer = new Timer(1000 / 60, this); // 60 FPS
-            timer.start();
-        }
-    
-        public void actionPerformed(ActionEvent e) {
-            update();
-            render();
-        }
+        Timer timer = new Timer(1000 / 60, this); // 60 FPS
+        timer.start();
+    }
 
-        public void run() {
-            init();
-        }
+    public void actionPerformed(ActionEvent e) {
+        update();
+        render();
+    }
 
-        private void init() {
+    public void run() {
+        init();
+    }
+
+    private void init() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
         running = true;
         gameState = GameState.START;
 
-        
         musicPlayer.playBGM();
     }
 
@@ -173,7 +171,7 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
     private void handleStartScreenInput() {
         if (inputHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
             gameState = GameState.PLAYING;
-            
+
         }
     }
 
@@ -186,19 +184,16 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
             player.stay();
         }
 
-        boolean pKeyCurrentlyPressed = 
-        inputHandler.isKeyPressed(KeyEvent.VK_P);
+        boolean pKeyCurrentlyPressed = inputHandler.isKeyPressed(KeyEvent.VK_P);
 
         if (pKeyCurrentlyPressed && !pKeyPressed) {
             gameState = GameState.PAUSED;
         }
-        pKeyPressed = pKeyCurrentlyPressed; 
+        pKeyPressed = pKeyCurrentlyPressed;
     }
-    
 
     private void handlePausedInput() {
-        boolean pKeyCurrentlyPressed = 
-        inputHandler.isKeyPressed(KeyEvent.VK_P);
+        boolean pKeyCurrentlyPressed = inputHandler.isKeyPressed(KeyEvent.VK_P);
         if (pKeyCurrentlyPressed && !pKeyPressed) {
             gameState = GameState.PLAYING;
         }
@@ -209,7 +204,7 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
     private void handleGameOverInput() {
         if (inputHandler.isKeyPressed(KeyEvent.VK_ENTER)) {
             gameState = GameState.START;
-            resetGame(); 
+            resetGame();
         }
     }
 
@@ -222,17 +217,18 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
 
     private void spawnObjects() {
         if (random.nextInt(100) < 2) {
-            objects.add(new Item(random.nextInt(WIDTH - 40), 0, "apple"));
+            objects.add(new Item(150 + random.nextInt(500), 0, "apple"));
         }
         if (random.nextInt(100) < 1) {
-            objects.add(new Item(random.nextInt(WIDTH - 40), 0, "banana"));
+            objects.add(new Item(150 + random.nextInt(500), 0, "banana"));
         }
         if (random.nextInt(100) < 2) {
-            objects.add(new Obstacle(random.nextInt(WIDTH - 40), 0, "coconut"));
+            objects.add(new Obstacle(150 + random.nextInt(500), 0, "coconut"));
         }
         if (random.nextInt(100) < 3) {
-            objects.add(new Obstacle(random.nextInt(WIDTH - 40), 0, "branch"));
+            objects.add(new Obstacle(150 + random.nextInt(500), 0, "branch"));
         }
+
     }
 
     private void updateObjects() {
@@ -253,10 +249,10 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
             if (playerRect.intersects(obj.getBounds())) {
                 if (obj instanceof Item) {
                     score += ((Item) obj).getScoreValue();
-                    musicPlayer.playSoundEffect("get"); 
+                    musicPlayer.playSoundEffect("get");
                 } else if (obj instanceof Obstacle) {
                     hp -= ((Obstacle) obj).getDamage();
-                    musicPlayer.playSoundEffect("damaged"); 
+                    musicPlayer.playSoundEffect("damaged");
                 }
                 objects.remove(i);
                 i--;
@@ -268,7 +264,7 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
         if (hp <= 0) {
             gameState = GameState.GAME_OVER;
             musicPlayer.stopBGM();
-            musicPlayer.playSoundEffect("gameover"); 
+            musicPlayer.playSoundEffect("gameover");
         }
     }
 
@@ -285,7 +281,6 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
         hp = MAX_HP;
         objects.clear();
 
-        
         musicPlayer.stopBGM();
         musicPlayer.playBGM();
     }
@@ -306,13 +301,11 @@ public class GameMain extends JPanel implements Runnable, ActionListener {
         g.setFont(objectInfoFont);
         g.setColor(Color.BLACK);
 
-        
         g.drawString("Apple: Score 1", OBJECT_INFO_X, OBJECT_INFO_Y);
         g.drawString("Banana: Score 3", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING);
         g.drawString("Coconut: Damage 10", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING * 2);
         g.drawString("Branch: Damage 20", OBJECT_INFO_X, OBJECT_INFO_Y + OBJECT_INFO_SPACING * 3);
     }
-
 
     private void drawStartScreen() {
         g.setFont(startScreenFont);

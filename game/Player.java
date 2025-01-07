@@ -41,7 +41,7 @@ public class Player {
     }
 
     public void moveLeft() {
-        int LEFT_MAX = 50;
+        int LEFT_MAX = 100;
         x -= 5;
         if (x < LEFT_MAX) {
             x = LEFT_MAX;
@@ -50,7 +50,7 @@ public class Player {
     }
 
     public void moveRight() {
-        int RIGHT_MAX = GameMain.WIDTH-width-50;
+        int RIGHT_MAX = GameMain.WIDTH-width-100;
         x += 5;
         if (x > RIGHT_MAX) {
             x = RIGHT_MAX;

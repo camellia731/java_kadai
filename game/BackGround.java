@@ -12,6 +12,7 @@ public class BackGround {
     private List<BufferedImage> backgrounds;
     private List<Integer> bgYPositions;
     private int speed;
+    BufferedImage sky;
 
     public BackGround() {
         backgrounds = new ArrayList<>();
@@ -19,10 +20,11 @@ public class BackGround {
         speed = 2;
 
         try {
-            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment0.png")));
-            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment1.png")));
-            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment2.png")));
-            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment3.png")));
+            sky = ImageIO.read(new FileInputStream("game/resources/sky.png"));
+            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree0.png")));
+            backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree1.png")));
+            //backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment2.png")));
+            //backgrounds.add(ImageIO.read(new FileInputStream("game/resources/tree_segment3.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,8 +44,10 @@ public class BackGround {
     }
 
     public void render(Graphics2D g) {
+        g.drawImage(sky, null, 0,0 );
         for (int i = 0; i < backgrounds.size(); i++) {
-            g.drawImage(backgrounds.get(i), 0, bgYPositions.get(i), null);
+            g.drawImage(backgrounds.get(i), 100, bgYPositions.get(i), null);
         }
+        
     }
 }
