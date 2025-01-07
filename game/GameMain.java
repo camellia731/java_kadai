@@ -3,12 +3,14 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameMain extends JPanel implements Runnable {
+public class GameMain extends JPanel implements Runnable, ActionListener {
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
     public static final int CLEAR_SCORE = 30;
@@ -77,36 +79,20 @@ public class GameMain extends JPanel implements Runnable {
             thread = new Thread(this);
             thread.start();
         }
-    }
-
-    public void run() {
-        init();
-
-        long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
-        double delta = 0;
-        long timer = System.currentTimeMillis();
-
-        while (running) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-
-            while (delta >= 1) {
-                update();
-                delta--;
-            }
-
-            render();
-
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
-            }
+            Timer timer = new Timer(1000 / 60, this); // 60 FPS
+            timer.start();
         }
-    }
+    
+        public void actionPerformed(ActionEvent e) {
+            update();
+            render();
+        }
 
-    private void init() {
+        public void run() {
+            init();
+        }
+
+        private void init() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
         running = true;
